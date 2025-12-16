@@ -126,15 +126,23 @@ public class AddStudentsUI {
                 // Reading form values from the form and saving t in variables
                 studName = Name.getText().trim();
                 studID = StudentId.getText().trim();
+                
                 gender = (String) gd.getSelectedItem();
                 String selected_Sem = (String) semester.getSelectedItem();
                 selectedProg = (String) program.getSelectedItem();
 
+                
                 if (studName.trim().isEmpty() || studID.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Please fill in all required fields!");
                     return;
                 }
-
+                try {
+                    int s_ID = Integer.parseInt(studID);
+                }catch(Exception ne){
+                    JOptionPane.showMessageDialog(null,"Student ID must be a number");
+                    System.out.println(ne.getMessage());
+                    return;
+                }
                 String letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz ";
                 for (int i = 0; i < studName.length(); i++) {
                     if (letters.indexOf(studName.charAt(i)) == -1) {
