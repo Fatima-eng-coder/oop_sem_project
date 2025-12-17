@@ -77,7 +77,7 @@ public class Login {
         String username = usernameField.getText();
         String password = new String(passwordField.getPassword());
 
-        if (username.equals("sajidakalsoom") && password.equals("1234#")) {
+        if (username.equals("") && password.equals("")) {
             new DashboardUI().launchDashboardPage();
             frame.dispose(); // Close the login window
         } else if (username.isEmpty()) {

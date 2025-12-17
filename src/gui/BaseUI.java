@@ -6,9 +6,9 @@ import java.awt.event.*;
 
 public abstract class BaseUI { // CLASS STARTS { every main screen is going to extend ye wali class }
 
-    protected JFrame frame;
+    protected JFrame frame; // frame
     protected JPanel sidebar;
-    protected JPanel mainContent;
+    protected JPanel mainContent; // panel
 
     protected boolean sidebarVisible = true;
     protected int sidebarWidth = 180;
@@ -21,7 +21,7 @@ public abstract class BaseUI { // CLASS STARTS { every main screen is going to e
         frame = new JFrame(windowTitle);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(1500, 700);
-        frame.setLocationRelativeTo(null);
+        // frame.setLocationRelativeTo(null);
 
         ImageIcon icon1 = new ImageIcon(getClass().getResource("/images/dashboardicon.jpeg"));
         frame.setIconImage(icon1.getImage());
@@ -187,7 +187,8 @@ public abstract class BaseUI { // CLASS STARTS { every main screen is going to e
     }
 
     public void handleSidebarNavigation(String pageName) {
-        frame.dispose(); // close current window // if i wont write this to screen k uper screen aye gi
+        frame.dispose(); // close current window // if i wont write this to screen k
+        // uper screen aye gi
 
         switch (pageName) {
             case "Dashboard":

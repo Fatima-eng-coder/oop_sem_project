@@ -31,7 +31,7 @@ public class AddFacultyandCourseUI {
         // -------------------- PARENT FRAME --------------------
         frame = new JFrame("Course & Instructor Management");
         frame.setSize(650, 400);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setLayout(new BorderLayout());
 
@@ -132,7 +132,12 @@ public class AddFacultyandCourseUI {
         cancelBtn.setBackground(Color.WHITE);
         cancelBtn.setForeground(Color.BLACK);
         cancelBtn.setFocusPainted(false);
-        cancelBtn.addActionListener(e -> frame.dispose());
+        cancelBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+            }
+        });
 
         JButton saveBtn = new JButton("Save");
         saveBtn.setBackground(Color.BLACK);

@@ -46,21 +46,21 @@ public class DashboardUI extends BaseUI {
         statsRow.add(createStatCard("Courses", "12"));
 
         dashboardBody.add(statsRow);
-        dashboardBody.add(Box.createVerticalStrut(30));
+        // dashboardBody.add(Box.createVerticalStrut(30));
 
         // -------------------- ADDINF DASHBOARD BODY TO MY MAIN CONTENT
         // ------------------
-        mainContent.add(dashboardBody, BorderLayout.CENTER);
+        super.mainContent.add(dashboardBody, BorderLayout.CENTER);
     }
 
     // ====================================== STAT CARD CREATION METHOD
     // ===========================
     public JPanel createStatCard(String title, String value) {
         JPanel card = new JPanel(new BorderLayout());
-        card.setBackground(new Color(245, 245, 245));
-        card.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(200, 200, 200), 1, true),
-                BorderFactory.createEmptyBorder(15, 15, 15, 15)));
+        card.setBackground(Color.lightGray);
+        // card.setBorder(BorderFactory.createCompoundBorder(
+        // BorderFactory.createLineBorder(new Color(200, 200, 200), 1, true),
+        // BorderFactory.createEmptyBorder(15, 15, 15, 15)));
 
         JLabel titleLabel = new JLabel(title, SwingConstants.CENTER);
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
@@ -69,7 +69,7 @@ public class DashboardUI extends BaseUI {
         JLabel valueLabel = new JLabel(value, SwingConstants.CENTER);
         valueLabel.setFont(new Font("Segoe UI", Font.BOLD, 28));
         valueLabel.setForeground(Color.BLACK);
-        valueLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+        // valueLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 
         card.add(titleLabel, BorderLayout.NORTH);
         card.add(valueLabel, BorderLayout.CENTER);

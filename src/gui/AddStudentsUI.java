@@ -21,7 +21,7 @@ public class AddStudentsUI {
         // --------------------------- PARENT FRAME --------------------
         frame = new JFrame("Student Management");
         frame.setSize(600, 500);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setLayout(new BorderLayout()); // Use BorderLayout
 
@@ -72,7 +72,7 @@ public class AddStudentsUI {
                     JOptionPane.showMessageDialog(null, "Please select a program first!");
                 } else {
                     ViewCourseUI ad = new ViewCourseUI(selectedProg);
-                    ad.launchAddCoursesPage();
+                    ad.launchViewCoursesPage();
                 }
             }
         });
@@ -109,7 +109,7 @@ public class AddStudentsUI {
 
         cancelBtn.setBackground(Color.WHITE);
         cancelBtn.setForeground(Color.BLACK);
-        cancelBtn.setFocusPainted(false);
+        // cancelBtn.setFocusPainted(false);
 
         // save buton
         JButton saveBtn = new JButton("Save");
@@ -126,20 +126,19 @@ public class AddStudentsUI {
                 // Reading form values from the form and saving t in variables
                 studName = Name.getText().trim();
                 studID = StudentId.getText().trim();
-                
+
                 gender = (String) gd.getSelectedItem();
                 String selected_Sem = (String) semester.getSelectedItem();
                 selectedProg = (String) program.getSelectedItem();
 
-                
                 if (studName.trim().isEmpty() || studID.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Please fill in all required fields!");
                     return;
                 }
                 try {
                     int s_ID = Integer.parseInt(studID);
-                }catch(Exception ne){
-                    JOptionPane.showMessageDialog(null,"Student ID must be a number");
+                } catch (Exception ne) {
+                    JOptionPane.showMessageDialog(null, "Student ID must be a number");
                     System.out.println(ne.getMessage());
                     return;
                 }
