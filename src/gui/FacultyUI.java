@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
 import java.util.*;
 
 public class FacultyUI extends BaseUI {
-
+    private JTextField searchField;
     private JTable table = new JTable();
 
     public void launchFacultyPage() {
@@ -41,11 +41,12 @@ public class FacultyUI extends BaseUI {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(Color.WHITE);
         buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 0)); // horizontal alignment, spacing 10
-        JTextField searchField = new JTextField(" Enter course ID to search or delete...");
+        searchField = new JTextField(" Enter course ID to search or delete...");
         searchField.setPreferredSize(new Dimension(400, 40));
         searchField.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
 
         JButton addFacultyBtn = new JButton("+ Add Course ");
+        JButton editCourseBtn = new JButton("Edit Course");
         JButton viewAllBtn = new JButton("View All Courses");
 
         JButton deleteBtn = new JButton("- Delete");
@@ -178,7 +179,7 @@ public class FacultyUI extends BaseUI {
             }
         });
 
-        JButton[] buttons = { addFacultyBtn, viewAllBtn, deleteBtn, searchBtn };
+        JButton[] buttons = { addFacultyBtn, editCourseBtn, viewAllBtn, deleteBtn, searchBtn };
         for (JButton btn : buttons) {
             btn.setBackground(Color.BLACK);
             btn.setForeground(Color.WHITE);
@@ -192,6 +193,13 @@ public class FacultyUI extends BaseUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 handleSidebarNavigation();
+            }
+        });
+
+        editCourseBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                editCourse();
             }
         });
 
@@ -273,6 +281,34 @@ public class FacultyUI extends BaseUI {
         };
 
         table.setModel(new DefaultTableModel(loadCourseTableData(), columns));
+    }
+
+    public void editCourse() {
+        String searchId = searchField.getText().trim();
+        if (searchId.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please enter Course Code to search and edit!");
+            return;
+        }
+
+        DataStore<Object> store = new DataStore<>();
+        ArrayList<Object> list = store.readAll("records.dat");
+        RecordList<Object> recordList = new RecordList<>();
+        for (Object obj : list)
+            recordList.add(obj);
+
+        Course foundCourse = null;
+        for (Course c : recordList.getTotalCourses()) {
+            if (c.getCourseCode().equalsIgnoreCase(searchId)) {
+                foundCourse = c;
+                break;
+            }
+        }
+
+        if (foundCourse != null) {
+            new AddFacultyandCourseUI(foundCourse).launchAddFacultyPage();
+        } else {
+            JOptionPane.showMessageDialog(null, "Course not found!");
+        }
     }
 
 }

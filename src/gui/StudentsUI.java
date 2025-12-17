@@ -51,8 +51,19 @@ public class StudentsUI extends BaseUI {
                 handleSidebarNavigation();
             }
         });
-
+        JButton editStudentbtn = new JButton("Edit Student");
+        editStudentbtn.setBackground(Color.BLACK);
+        editStudentbtn.setForeground(Color.WHITE);
+        editStudentbtn.setFocusPainted(false);
+        editStudentbtn.setBorder(BorderFactory.createEmptyBorder(10, 18, 10, 18));
+        editStudentbtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                editStudent();
+            }
+        });
         buttonPanel.add(addStudentBtn); // adding add students button to the button pannl
+        buttonPanel.add(editStudentbtn); // added edit student button to the panel
 
         // Add Transcript Button
         JButton addTranscriptBtn = new JButton("+ Add Transcript");
@@ -479,6 +490,34 @@ public class StudentsUI extends BaseUI {
         JOptionPane.showMessageDialog(null, coursesArray,
                 "Assigned Courses for " + selectedStudent.getName(),
                 JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public void editStudent() {
+        String searchId = searchField.getText().trim();
+        if (searchId.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please enter Student ID to search and edit!");
+            return;
+        }
+
+        DataStore<Object> store = new DataStore<>();
+        ArrayList<Object> list = store.readAll("records.dat");
+        RecordList<Object> recordList = new RecordList<>();
+        for (Object obj : list)
+            recordList.add(obj);
+
+        Student foundStudent = null;
+        for (Student s : recordList.getTotalStudents()) {
+            if (s.getStudentId().equalsIgnoreCase(searchId)) {
+                foundStudent = s;
+                break;
+            }
+        }
+
+        if (foundStudent != null) {
+            new AddStudentsUI(foundStudent).launchAddStudentsPage();
+        } else {
+            JOptionPane.showMessageDialog(null, "Student not found!");
+        }
     }
 
 }

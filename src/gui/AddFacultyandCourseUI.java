@@ -10,6 +10,14 @@ import java.awt.event.ActionEvent;
 public class AddFacultyandCourseUI {
 
     private JFrame frame;
+    private Course courseToEdit;
+
+    public AddFacultyandCourseUI() {
+    }
+
+    public AddFacultyandCourseUI(Course courseToEdit) {
+        this.courseToEdit = courseToEdit;
+    }
 
     private Course[] courses = new Course[] {
             new Course("CS101", "Object Oriented Programming", 3, null),
@@ -139,12 +147,22 @@ public class AddFacultyandCourseUI {
             }
         });
 
-        JButton saveBtn = new JButton("Save");
-        saveBtn.setBackground(Color.BLACK);
-        saveBtn.setForeground(Color.WHITE);
-        saveBtn.setFocusPainted(false);
-
         // save button ka action listender
+        JButton saveBtn = new JButton(courseToEdit == null ? "Save" : "Update");
+
+        if (courseToEdit != null) {
+            // Pre-fill fields
+            courseCode.setText(courseToEdit.getCourseCode());
+            courseTitle.setSelectedItem(courseToEdit.getTitle());
+            creditHours.setText(String.valueOf(courseToEdit.getCreditHours()));
+            if (courseToEdit.getInstructor() != null) {
+                instructorName.setText(courseToEdit.getInstructor().getName());
+                instructorQualification.setSelectedItem(courseToEdit.getInstructor().getQualification());
+                gender_ComboBox.setSelectedItem(courseToEdit.getInstructor().getGender());
+            }
+            courseTitle.setEnabled(false); // Can't change course title easily as it links to code
+        }
+
         saveBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -209,22 +227,45 @@ public class AddFacultyandCourseUI {
                     recordList.add(obj);
 
                 for (Course c : recordList.getTotalCourses()) {
+                    if (courseToEdit != null && c.getCourseCode().equalsIgnoreCase(courseToEdit.getCourseCode())) {
+                        continue;
+                    }
                     if (c.getCourseCode().equalsIgnoreCase(C_code)) {
                         JOptionPane.showMessageDialog(null, "Course Code already exists!");
                         return;
                     }
                 }
 
-                dataStore.saveToFile("records.dat", course);
+                if (courseToEdit != null) {
+                    // UPDATE LOGIC
+                    ArrayList<Object> updatedList = new ArrayList<>();
+                    for (Object obj : recordList.getAll()) {
+                        if (obj instanceof Course) {
+                            Course existing = (Course) obj;
+                            if (existing.getCourseCode().equalsIgnoreCase(courseToEdit.getCourseCode())) {
+                                updatedList.add(course); // Replace
+                            } else {
+                                updatedList.add(obj);
+                            }
+                        } else {
+                            updatedList.add(obj);
+                        }
+                    }
+                    dataStore.overwriteFile("records.dat", updatedList);
+                    JOptionPane.showMessageDialog(null, "Course updated successfully!");
+                    frame.dispose();
+                } else {
+                    // SAVE LOGIC
+                    dataStore.saveToFile("records.dat", course);
+                    JOptionPane.showMessageDialog(null, "Course saved successfully!");
 
-                JOptionPane.showMessageDialog(null, "Course saved successfully!");
-
-                courseCode.setText("");
-                courseTitle.setSelectedIndex(0);
-                creditHours.setText("");
-                instructorName.setText("");
-                instructorQualification.setSelectedIndex(0);
-                gender_ComboBox.setSelectedIndex(0);
+                    courseCode.setText("");
+                    courseTitle.setSelectedIndex(0);
+                    creditHours.setText("");
+                    instructorName.setText("");
+                    instructorQualification.setSelectedIndex(0);
+                    gender_ComboBox.setSelectedIndex(0);
+                }
 
             }
         });

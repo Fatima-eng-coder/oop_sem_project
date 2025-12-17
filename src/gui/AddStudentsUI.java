@@ -15,6 +15,14 @@ public class AddStudentsUI {
     String studID;
     String gender;
     int sem;
+    private Student studentToEdit;
+
+    public AddStudentsUI() {
+    }
+
+    public AddStudentsUI(Student studentToEdit) {
+        this.studentToEdit = studentToEdit;
+    }
 
     public void launchAddStudentsPage() {
 
@@ -112,7 +120,18 @@ public class AddStudentsUI {
         // cancelBtn.setFocusPainted(false);
 
         // save buton
-        JButton saveBtn = new JButton("Save");
+        JButton saveBtn = new JButton(studentToEdit == null ? "Save" : "Update");
+
+        if (studentToEdit != null) {
+            // Pre-fill fields
+            Name.setText(studentToEdit.getName());
+            StudentId.setText(studentToEdit.getStudentId());
+            StudentId.setEditable(false); // ID cannot be changed
+            semester.setSelectedItem(String.valueOf(studentToEdit.getSemester()));
+            gd.setSelectedItem(studentToEdit.getGender());
+            program.setSelectedItem(studentToEdit.getProgram());
+            program.setEnabled(false); // Program usually shouldn't change as it changes the class type
+        }
 
         saveBtn.setBackground(Color.BLACK);
         saveBtn.setForeground(Color.WHITE);
@@ -189,6 +208,10 @@ public class AddStudentsUI {
                     recordList.add(obj);
 
                 for (Student s : recordList.getTotalStudents()) {
+                    // If we are editing, we skip the check for our OWN id
+                    if (studentToEdit != null && s.getStudentId().equalsIgnoreCase(studentToEdit.getStudentId())) {
+                        continue;
+                    }
                     if (s.getStudentId().equalsIgnoreCase(studID)) {
                         JOptionPane.showMessageDialog(null, "Student ID already exists!");
                         return; // Stop saving
@@ -200,15 +223,36 @@ public class AddStudentsUI {
                             "No object is saved to the file as no program is selected, no object of student is made");
                     return;
                 } else {
-                    dataStore.saveToFile("records.dat", sd);
-                    JOptionPane.showMessageDialog(null, "Student saved successfully!");
+                    if (studentToEdit != null) {
+                        // UPDATE LOGIC
+                        ArrayList<Object> updatedList = new ArrayList<>();
+                        for (Object obj : recordList.getAll()) {
+                            if (obj instanceof Student) {
+                                Student existing = (Student) obj;
+                                if (existing.getStudentId().equalsIgnoreCase(studentToEdit.getStudentId())) {
+                                    updatedList.add(sd); // Replace with new object
+                                } else {
+                                    updatedList.add(obj);
+                                }
+                            } else {
+                                updatedList.add(obj);
+                            }
+                        }
+                        dataStore.overwriteFile("records.dat", updatedList);
+                        JOptionPane.showMessageDialog(null, "Student updated successfully!");
+                        frame.dispose(); // Close window after update
+                    } else {
+                        // SAVE LOGIC
+                        dataStore.saveToFile("records.dat", sd);
+                        JOptionPane.showMessageDialog(null, "Student saved successfully!");
 
-                    // CLEAR FIELDS AFTER SAVEing for the nxt input jo ha dalain gy
-                    StudentId.setText("");
-                    Name.setText("");
-                    program.setSelectedIndex(0);
-                    semester.setSelectedIndex(0);
-                    gd.setSelectedIndex(0);
+                        // CLEAR FIELDS AFTER SAVEing for the nxt input jo ha dalain gy
+                        StudentId.setText("");
+                        Name.setText("");
+                        program.setSelectedIndex(0);
+                        semester.setSelectedIndex(0);
+                        gd.setSelectedIndex(0);
+                    }
                 }
 
             }
